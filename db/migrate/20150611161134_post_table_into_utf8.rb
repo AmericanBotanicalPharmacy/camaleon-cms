@@ -26,94 +26,110 @@ class PostTableIntoUtf8 < CamaManager.migration_class
       end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}term_taxonomy" do |t|
-      t.string   "taxonomy", index: true
-      t.text     "description", limit: 1073741823
-      t.integer  "parent_id", index: true
-      t.integer  "count"
-      t.string   "name"
-      t.string   "slug", index: true
-      t.integer  "term_group"
-      t.integer  "term_order", index: true
-      t.string   "status"
+    unless table_exists? CamaleonCms::TermTaxonomy.table_name
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}term_taxonomy" do |t|
+        t.string   "taxonomy", index: true
+        t.text     "description", limit: 1073741823
+        t.integer  "parent_id", index: true
+        t.integer  "count"
+        t.string   "name"
+        t.string   "slug", index: true
+        t.integer  "term_group"
+        t.integer  "term_order", index: true
+        t.string   "status"
 
-      t.timestamps null: false
-      t.belongs_to :user, index: true#, foreign_key: true
+        t.timestamps null: false
+        t.belongs_to :user, index: true#, foreign_key: true
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}posts" do |t|
-      t.string   "title"
-      t.string   "slug", index: true
-      t.text     "content",          limit: 1073741823
-      t.text     "content_filtered", limit: 1073741823
-      t.string   "status", default: "published", index: true
-      t.integer  "comment_count", default: 0
-      t.datetime "published_at"
-      t.integer  "post_parent", index: true
-      t.string   "visibility", default: "public"
-      t.text     "visibility_value"
-      t.string   "post_class", default: "Post", index: true
+    unless table_exists? CamaleonCms::Post.table_name
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}posts" do |t|
+        t.string   "title"
+        t.string   "slug", index: true
+        t.text     "content",          limit: 1073741823
+        t.text     "content_filtered", limit: 1073741823
+        t.string   "status", default: "published", index: true
+        t.integer  "comment_count", default: 0
+        t.datetime "published_at"
+        t.integer  "post_parent", index: true
+        t.string   "visibility", default: "public"
+        t.text     "visibility_value"
+        t.string   "post_class", default: "Post", index: true
 
-      t.timestamps null: false
-      t.belongs_to :user, index: true#, foreign_key: true
+        t.timestamps null: false
+        t.belongs_to :user, index: true#, foreign_key: true
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}term_relationships" do |t|
-      t.integer "objectid", index: true
-      t.integer "term_order", index: true
-      t.belongs_to :term_taxonomy, index: true
+    unless table_exists? CamaleonCms::TermRelationship.table_name
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}term_relationships" do |t|
+        t.integer "objectid", index: true
+        t.integer "term_order", index: true
+        t.belongs_to :term_taxonomy, index: true
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}user_relationships" do |t|
-      t.integer "term_order"
-      t.integer "active", default: 1
+    unless table_exists? "#{PluginRoutes.static_system_info["db_prefix"]}user_relationships"
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}user_relationships" do |t|
+        t.integer "term_order"
+        t.integer "active", default: 1
 
-      t.belongs_to :term_taxonomy, index: true
-      t.belongs_to :user, index: true
+        t.belongs_to :term_taxonomy, index: true
+        t.belongs_to :user, index: true
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}comments" do |t|
-      t.string   "author"
-      t.string   "author_email"
-      t.string   "author_url"
-      t.string   "author_IP"
-      t.text     "content"
-      t.string   "approved", default: "pending", index: true
-      t.string   "agent"
-      t.string   "typee"
-      t.integer  "comment_parent", index: true
-      t.belongs_to :post, index: true#, foreign_key: true
-      t.belongs_to :user, index: true#, foreign_key: true
-      t.timestamps null: false
+    unless table_exists? "#{PluginRoutes.static_system_info["db_prefix"]}user_relationships"
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}comments" do |t|
+        t.string   "author"
+        t.string   "author_email"
+        t.string   "author_url"
+        t.string   "author_IP"
+        t.text     "content"
+        t.string   "approved", default: "pending", index: true
+        t.string   "agent"
+        t.string   "typee"
+        t.integer  "comment_parent", index: true
+        t.belongs_to :post, index: true#, foreign_key: true
+        t.belongs_to :user, index: true#, foreign_key: true
+        t.timestamps null: false
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}custom_fields" do |t|
-      t.string  "object_class", index: true
-      t.string  "name"
-      t.string  "slug", index: true
-      t.integer  "objectid", index: true
-      t.integer "parent_id", index: true
-      t.integer "field_order"
-      t.integer "count", default: 0
-      t.boolean "is_repeat", default: false
-      t.text    "description"
-      t.string  "status"
+    unless table_exists? CamaleonCms::CustomField.table_name
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}custom_fields" do |t|
+        t.string  "object_class", index: true
+        t.string  "name"
+        t.string  "slug", index: true
+        t.integer  "objectid", index: true
+        t.integer "parent_id", index: true
+        t.integer "field_order"
+        t.integer "count", default: 0
+        t.boolean "is_repeat", default: false
+        t.text    "description"
+        t.string  "status"
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}custom_fields_relationships" do |t|
-      t.integer "objectid", index: true
-      t.integer "custom_field_id", index: true
-      t.integer "term_order"
-      t.string  "object_class", index: true
-      t.text    "value", limit: 1073741823
-      t.string  "custom_field_slug", index: true
+    unless table_exists? CamaleonCms::CustomFieldsRelationship.table_name
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}custom_fields_relationships" do |t|
+        t.integer "objectid", index: true
+        t.integer "custom_field_id", index: true
+        t.integer "term_order"
+        t.string  "object_class", index: true
+        t.text    "value", limit: 1073741823
+        t.string  "custom_field_slug", index: true
+      end
     end
 
-    create_table "#{PluginRoutes.static_system_info["db_prefix"]}metas" do |t|
-      t.string  "key", index: true
-      t.text    "value", limit: 1073741823
-      t.integer "objectid", index: true
-      t.string  "object_class", index: true
+    unless table_exists? CamaleonCms::Meta.table_name
+      create_table "#{PluginRoutes.static_system_info["db_prefix"]}metas" do |t|
+        t.string  "key", index: true
+        t.text    "value", limit: 1073741823
+        t.integer "objectid", index: true
+        t.string  "object_class", index: true
+      end
     end
 
     if ActiveRecord::Base.connection.adapter_name.downcase.include?("mysql")
