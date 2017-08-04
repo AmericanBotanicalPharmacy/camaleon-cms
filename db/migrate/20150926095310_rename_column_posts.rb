@@ -1,9 +1,9 @@
 # change post structure to optimize query speed
 class RenameColumnPosts < CamaManager.migration_class
   def change
-    remove_column "#{PluginRoutes.static_system_info["db_prefix"]}posts", :comment_count
-    add_column "#{PluginRoutes.static_system_info["db_prefix"]}posts", :post_order, :integer, default: 0
-    add_column "#{PluginRoutes.static_system_info["db_prefix"]}posts", :taxonomy_id, :integer, default: nil, index: true
+    remove_column "#{PluginRoutes.static_system_info["db_prefix"]}posts", :comment_count if column_exists?(CamaleonCms::Post.table_name, :comment_count)
+    add_column "#{PluginRoutes.static_system_info["db_prefix"]}posts", :post_order, :integer, default: 0 unless column_exists?(CamaleonCms::Post.table_name, :post_order)
+    add_column "#{PluginRoutes.static_system_info["db_prefix"]}posts", :taxonomy_id, :integer, default: nil, index: true unless column_exists?(CamaleonCms::Post.table_name, :taxonomy_id)
     CamaleonCms::Post.all.each do |post|
       begin
         post_id = post.get_post_type_depre.id
