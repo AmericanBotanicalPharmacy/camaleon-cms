@@ -41,7 +41,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'cama_meta_tag'
 
   # MEDIA MANAGER
-  s.add_dependency 'aws-sdk', '~> 2'
+  # https://github.com/aws/aws-sdk-ruby/blob/master/V3_UPGRADING_GUIDE.md
+  s.add_dependency 'aws-sdk-s3', '~> 1'
 
   # development dependencies
   s.add_development_dependency 'rspec', '>= 2', '< 4'
