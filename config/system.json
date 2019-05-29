@@ -15,5 +15,3 @@
   "auto_include_migrations": true, // permit to auto include all migrations of camaleon cms and its related plugins, if false you can generate manually with: rake camaleon_cms:generate_migrations
   "default_layout": "index" // define default layout name for camaleon frontend
 }
-
-// Note: after any change in this file, you need to restart your server to apply changes.
